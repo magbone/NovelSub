@@ -34,9 +34,10 @@ class HTMLParser(object):
     def _row_tag(self, str1):
         return "<div class=\"row\">" + str1 + "</div>"
 
-class MailContent(HTMLParser):
+class MailContentHTML(HTMLParser):
 
-    begin_body = """<!DOCTYPE html><html><head><meta charset="utf-8"/><title></title><link rel="stylesheet" href="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css">
+    begin_body = """<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8"/><title></title><link rel="stylesheet" href="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css">
 <script src="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script></head><body>"""
 
     end_body = "</body></html>"
@@ -55,19 +56,19 @@ class MailContent(HTMLParser):
         return "<div class=\"mdui-container\">" + str1 + "</div>"
 
     def _author_tag(self, str1):
-        return "<div class=\"mdui-col-xs-6 mdui-col-sm-4\"><div class=\"mdui-typo-display-1\">"+ str1 + "</div></div>"
+        return "<div class=\"mdui-col-xs-2 \"><div class=\"mdui-typo-subtitle\">小说名字："+ str1 + "</div></div>"
 
     def _name_tag(self, str1):
-        return "<div class=\"mdui-col-xs-6 mdui-col-sm-4\"><div class=\"mdui-typo-display-1\">" + str1 + "</div></div>"
+        return "<div class=\"mdui-col-xs-2\"><div class=\"mdui-typo-subtitle\">小说作者：" + str1 + "</div></div>"
 
     def _count_tag(self, str1):
-        return "<div class=\"mdui-col-xs-6 mdui-col-sm-4\"><div class=\"mdui-typo-display-1\">" + str(str1) + "</div></div>"
+        return "<div class=\"mdui-col-xs-2\"><div class=\"mdui-typo-subtitle\">更新章节数：" + str(str1) + "</div></div>"
 
     def _chapter_tag(self, str1):
-        return "<div class=\"mdui-col-xs-6 mdui-col-sm-4\"><div class=\"mdui-typo-display-1\">" +  " ".join((tuple([str(chapter) for chapter in str1]))) + "</div></div>"
+        return "<div class=\"mdui-col-xs-4\"><div class=\"mdui-typo--1\">更新章节：" +  " ".join((tuple([str(chapter) for chapter in str1]))) + "</div></div>"
 
     def _link_tag(self, str1="#"):
-        return "<div class=\"mdui-col-xs-6 mdui-col-sm-4\"><div class=\"mdui-typo\"><a href=\"" + str1 + "\">前往官网</a></div></div>"
+        return "<div class=\"mdui-col-xs-2\"><div class=\"mdui-typo\"><a href=\"" + str1 + "\">前往官网</a></div></div>"
 
     def _row_tag(self, str1):
 
@@ -103,7 +104,7 @@ class MailContentText:
     def parse_text(self):
         text = ""
         for novel in self._novels:
-            if len(novel['update_chapters_count']) == 0:
+            if novel['update_chapters_count'] == 0:
                 chapters = "暂无更新"
             else:
                 chapters = " ".join(tuple([str(chapter) for chapter in novel['update_chapters']]))
@@ -153,7 +154,7 @@ class MailRss:
             smtp_obj.quit()
 # Test block
 if __name__ == '__main__':
-    content = MailContent()
+    content = MailContentHTML()
     content.add("xhy", "xhy", "http://sss.com", [123, 124])
     content.add("xhy", "xhy", "https://www.com", [123])
     print(content.parse_html())

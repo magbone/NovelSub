@@ -7,7 +7,7 @@ A novel subscribe tool
 git clone git@github.com:magbone/NovelSub.git
 cd ./NovelSub/novelsub
 
-python -c conf.json
+python subscribe.py -c conf.json
 
 ```
 

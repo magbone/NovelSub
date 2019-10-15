@@ -1,1 +1,0 @@
-{"mail": {"smtp_server": "smtp.sina.com", "smtp_port": 465, "user": "user", "password": "password"}, "sender": "sender_email", "receiver": "receiver mail", "timeout": 2, "schedule": 12, "novels": [{"name": "\u5143\u5c0a", "author": "\u5929\u8695\u571f\u8c46", "link": "http://book.zongheng.com/showchapter/685640.html", "begin_chapter": 1019}]}

@@ -5,6 +5,7 @@ from email.mime.text import MIMEText
 from email.header import Header
 import smtplib
 
+from .logger import logger
 
 class HTMLParser(object):
 
@@ -149,12 +150,14 @@ class MailRss:
             smtp_obj.set_debuglevel(1)
             smtp_obj.sendmail(self._sender, self._receivers, self._message.as_string())
         except smtplib.SMTPException as e:
-            print(e)
+            logger.error(e.strerror)
         else:
             smtp_obj.quit()
 # Test block
+'''
 if __name__ == '__main__':
     content = MailContentHTML()
     content.add("xhy", "xhy", "http://sss.com", [123, 124])
     content.add("xhy", "xhy", "https://www.com", [123])
     print(content.parse_html())
+'''

@@ -1,16 +1,17 @@
 # coding: utf-8
 
 
-import requests
-import re
-import json
 import argparse
-
+import json
+import re
 from builtins import NotImplementedError
-from requests import  ConnectionError, HTTPError, Timeout, TooManyRedirects
-from apscheduler.schedulers.background import  BackgroundScheduler
-from mail import MailContent, MailContentText, MailRss
-from novelsub import logger
+
+import requests
+from apscheduler.schedulers.background import BackgroundScheduler
+from requests import ConnectionError, HTTPError, Timeout, TooManyRedirects
+
+from novelsub.lib.mail import MailRss, MailContentText
+from novelsub.lib.logger import logger
 
 class HtmlFilterImp(object):
 
@@ -152,7 +153,7 @@ class Subscribe:
                     update_chapters.append(chapter)
                 if parsed_chapter >= newest_chapter:
                     newest_chapter = parsed_chapter
-            print(update_chapters)
+            logger.info(update_chapters)
             mail_content_text.add(novel_name=novel['name'],
                              novel_author=novel['author'],
                              novel_link="link",
@@ -164,7 +165,7 @@ class Subscribe:
         mail_rss = MailRss(sender=self._conf_json['sender'],
                             receivers=self._conf_json['receiver'],
                             text=mail_content_text.parse_text())
-        print(mail_content_text.parse_text())
+        logger.info(mail_content_text.parse_text())
         mail_rss.smtp_server(host=self._conf_json['mail']['smtp_server'],
                             user=self._conf_json['mail']['user'],
                             password=self._conf_json['mail']['password'],
@@ -185,14 +186,14 @@ class Subscribe:
             pass
 
 
-if __name__ == '__main__':
-
+def main():
     parse = argparse.ArgumentParser(description="A novel subscribe tool")
     parse.add_argument("-c", help="conf path")
     args = parse.parse_args()
     if args.c:
         s = Subscribe(args.c)
         s.run()
+
 
 
 

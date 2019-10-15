@@ -36,7 +36,7 @@ See default json as follows.
         {
                 "name": "novel name",
                 "author": "novel author", 
-                "link": "novel chapters link"
+                "link": "novel chapters link",
                 "begin_chapter": 1234 # the chapter you begin to subscribe
         }
   ]

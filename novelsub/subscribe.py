@@ -3,8 +3,8 @@
 
 import argparse
 import json
+import abc
 import re
-from builtins import NotImplementedError
 
 import requests
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -13,12 +13,11 @@ from requests import ConnectionError, HTTPError, Timeout, TooManyRedirects
 from novelsub.lib.mail import MailRss, MailContentText
 from novelsub.lib.logger import logger
 
-class HtmlFilterImp(object):
+class HtmlFilterImp(metaclass=abc.ABCMeta):
 
+    @abc.abstractclassmethod
     def parse_arg(self):
-
-
-        raise NotImplementedError
+        pass
 
 
 class Request(HtmlFilterImp):
@@ -50,7 +49,7 @@ class Request(HtmlFilterImp):
 
 class ChapterParser(object):
 
-    __dict__ = {
+    number_table = {
         '零': 0,
         '0' : 0,
         '一': 1,
@@ -77,16 +76,17 @@ class ChapterParser(object):
         '千': 1000,
         '万': 10000
     }
-    index = 0
+
 
     def __init__(self, chapter):
         self._chapter = chapter[::-1]
+        self._index = 0
 
     def _next(self):
-        if self.index >= len(self._chapter):
+        if self._index >= len(self._chapter):
             return None
-        self._dict_value = self._chapter[self.index]
-        self.index += 1
+        self._dict_value = self._chapter[self._index]
+        self._index += 1
         return self._dict_value
 
     def parse_chapter(self):
@@ -125,8 +125,8 @@ class Subscribe:
         # conf demo
         #
         # mail(Obj):
-        #     smtp_host: smtp server address
-        #     smtp_port: smtp server port (25 is default and 476 is used SSL)
+        #     smtp_host: smtp defines address
+        #     smtp_port: smtp defines port (25 is default and 476 is used SSL)
         #     sender: sender mail address(String)
         #     receivers: receiver mail addresses(String array)
         # timeout(Number): request the html timeout
@@ -177,7 +177,9 @@ class Subscribe:
 
     def run(self):
         self.__job__()
-
+        logger.info(
+            "Novel Subscribe started."
+        )
         scheduler = BackgroundScheduler()
         scheduler.add_job(self.__job__, 'interval', seconds= 3600 * self._conf_json['schedule'])
         scheduler.start()

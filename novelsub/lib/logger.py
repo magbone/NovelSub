@@ -1,9 +1,10 @@
 # coding: utf-8
 
 import logging
-
+import threading
 
 class Logger:
+    _lock = threading.Lock()
 
     def __init__(self, log_file_path="sub.log"):
         self._logger = logging.getLogger("logger")
@@ -14,9 +15,9 @@ class Logger:
         self._set_formatter()
 
     def _set_level(self):
-        self._logger.setLevel(logging.DEBUG)
-        self._stream_handler.setLevel(logging.WARNING)
-        self._file_handler.setLevel(logging.DEBUG)
+        self._logger.setLevel(logging.INFO)
+        self._stream_handler.setLevel(logging.INFO)
+        self._file_handler.setLevel(logging.INFO)
 
 
     def _set_formatter(self):
@@ -29,18 +30,23 @@ class Logger:
 
 
     def debug(self, args):
-        self._logger.debug(args)
+        with self._lock:
+            self._logger.debug(args)
 
     def info(self, args):
-        self._logger.info(args)
+        with self._lock:
+            self._logger.info(args)
 
     def warning(self, args):
-        self._logger.warning(args)
+        with self._lock:
+            self._logger.warning(args)
 
     def error(self, args):
-        self._logger.warning(args)
+        with self._lock:
+            self._logger.error(args)
 
     def critical(self, args):
-        self._logger.critical(args)
+        with self._lock:
+            self._logger.critical(args)
 
 logger = Logger()
